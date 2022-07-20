@@ -1,5 +1,5 @@
 import mapboxgl from 'https://cdn.skypack.dev/mapbox-gl';
-import Mapbox3DTiles from "./Mapbox3DTiles.mjs";
+import Mapbox3DTiles from "./mapbox3DTiles.mjs";
 
 Mapbox3DTiles.DEBUG = debug;
 
