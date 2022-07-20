@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8' />
+	<title>3DTiles Next - pointclouds</title>
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+	<link rel="stylesheet" type="text/css" href="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css">
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: Arial, Helvetica, sans-serif;
+
+		}
+
+		#map {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+		}
+
+		.container {
+			position: absolute;
+			left: 5px;
+			padding: 5px;
+			border: 1px solid gray;
+			border-radius: 2px;
+			background-color: black;
+			color: white;
+			min-width: 200px;
+		}
+
+		.light {
+			color: black;
+			background-color: white;
+		}
+
+		#buttonbox {
+			top: 5px;
+			height: 50px;
+		}
+
+		#info {
+			top: 75px;
+			min-height: 75px;
+		}
+	</style>
+
+	<script type="importmap">
+		{
+		  "imports": {
+			"three": "https://unpkg.com/three@v0.116.0/build/three.module.js",
+			"three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.116.0/examples/jsm/loaders/GLTFLoader",
+			"three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.116.0/examples/jsm/loaders/DRACOLoader"
+		  }
+		}
+	  </script>
+	<script type="module" src="./app.js"></script>
+</head>
+
+<body>
+	<div id='map'></div>
+	<div id="buttonbox" class="container">
+		<button id="rotterdam" title="zoom to Rotterdam">Rotterdam</button>
+		<button id="velsen" title="zoom to Velsen">Velsen</button>
+		<a href="https://github.com/wallabyway/mapbox-3dtiles"><img
+				src="https://github.githubassets.com/favicons/favicon-dark.png"></a><br>
+		<input type="checkbox" id="debug"><label for="debug" title="show 3d tile boxes on/off">Debug</label>
+		<input type="checkbox" id="light"><label for="light" title="light background on/off">Light</label>
+	</div>
+	<div id="info" class="container"></div>
+</body>
+
+</html>
+
+
+<script>
+	// minimal HTML UI Panel
+	const urlParams = new URLSearchParams(window.location.search);
+	const debug = urlParams.get('debug') ? urlParams.get('debug') == "true" : false;
+	const update = urlParams.get('update') ? parseInt(urlParams.get('update')) : 0;
+	const light = urlParams.get('light') ? urlParams.get('light') == "true" : false;
+
+	const qs = (i) => { return document.querySelector(i) };
+	qs('#debug').checked = debug;
+	qs('#light').checked = light;
+	if (light) {
+		document.querySelectorAll('.container').forEach(container => container.classList.add('light'));
+	}
+
+	qs('#rotterdam').addEventListener('click', () => window.location = `./?debug=${debug}&light=${light}&update=${1 + update}#15.97/51.899662/4.478322/34.4/58`);
+	qs('#velsen').addEventListener('click', () => window.location = `./?debug=${debug}&light=${light}&update=${1 + update}#17.65/52.455315/4.607382/-10.4/60`);
+	qs('#debug').addEventListener('change', function (e) {
+		window.location = `./?debug=${e.target.checked}&light=${light}${window.location.hash}`
+	});
+	qs('#light').addEventListener('change', function (e) {
+		window.location = `./?debug=${debug}&light=${e.target.checked}${window.location.hash}`
+	});
+</script>
