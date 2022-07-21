@@ -1,17 +1,20 @@
 # Tiles3D-Mapbox
-This is a demo implementation of 3D-Tiles-Next using mapbox-gl/three.js and is used to compare two different point-cloud compressions.
+This is an implementation of 3D-Tiles-Next using mapbox-gl/three.js (based on [github/Geodan](https://github.com/Geodan/mapbox-3dtiles)).  It will be used to compare two different point-cloud compressions, based on their performance (decode time, file size, concurrency, loc).
 
 <img src="https://user-images.githubusercontent.com/440241/180083018-5359ecef-b37e-413f-9aa8-942acd10828e.gif" width="770px">
 
-We are comparing the streaming experience (based on decode time, file size, web-worker displatch) and implementation simplicity between two point-cloud sets:  
+The OaklandTrainStation pointcloud set, was converted from RCP into:
 
-1. 3D Tiles v1.0 using PNTS (Draco compressed points) and 
-2. 3D Tiles Next v1.1 using glTF (MeshOpt compressed points)
+1. `/oaklandtrainstation/draco` PNTS (Draco compressed points) used within 3D-Tiles v1.0
+2. `/oaklandtrainstation/gltf` glTF (MeshOpt compressed points) used within 3D-Tiles-Next v1.1
 
-##### Additional Notes
+##### Implementation Notes
 
-- The viewer is an minimal implementation of 3D-Tiles-Next, using a version of three.js based on mapbox-gl.
-- this mapbox implementation highlights the importance of `locating a glTF on the planet` and connecting a piece of geometry with external meta-data by a `Feature-ID`
+- The 3d-tiles-next viewer uses three.js via mapbox-gl under the hood
+- demostrate the minimal implementation code for displaying a point-cloud HLOD (and terrain).
+- it uses mapbox to demonstrate how to `locate a glTF on the planet`
+- the debug mode helps with bounding box issues inside `tileset.json` 
+- hovering over objects, connects the object geometry to meta-data (via 3DBM and glTF featureID see `layer` class)
 
 
 ## Getting Started
