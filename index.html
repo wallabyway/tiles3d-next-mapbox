@@ -48,12 +48,12 @@
 		}
 	</style>
 
-	<script async src="https://ga.jspm.io/npm:es-module-shims@1.4.4/dist/es-module-shims.js"></script>
+	<script async src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.6/es6-shim.min.js"></script>
 	<script type="importmap">
 		{
 		  "imports": {
-			"three": "https://unpkg.com/three@v0.116.0/build/three.module.js",
-			"three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.116.0/examples/jsm/loaders/GLTFLoader",
+			"three": "https://cdn.jsdelivr.net/npm/three@0.116.0/build/three.module.min.js",
+			"three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.128.0/examples/jsm/loaders/GLTFLoader",
 			"three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.116.0/examples/jsm/loaders/DRACOLoader"
 		  }
 		}
@@ -65,7 +65,7 @@
 	<div id='map'></div>
 	<div id="buttonbox" class="container">
 		<button id="rotterdam" title="zoom to Rotterdam">Rotterdam</button>
-		<button id="velsen" title="zoom to Velsen">Velsen</button>
+		<button id="recgolf" title="zoom to recgolf">recgolf</button>
 		<a href="https://github.com/wallabyway/tiles3d-next-mapbox"><img
 				src="https://github.githubassets.com/favicons/favicon-dark.png"></a><br>
 		<input type="checkbox" id="debug"><label for="debug" title="show 3d tile boxes on/off">Debug</label>
@@ -92,7 +92,7 @@
 	}
 
 	qs('#rotterdam').addEventListener('click', () => window.location = `./?debug=${debug}&light=${light}&update=${1 + update}#15.97/51.899662/4.478322/34.4/58`);
-	qs('#velsen').addEventListener('click', () => window.location = `./?debug=${debug}&light=${light}&update=${1 + update}#17.65/52.455315/4.607382/-10.4/60`);
+	qs('#recgolf').addEventListener('click', () => window.location = `./?debug=${debug}&light=${light}&update=${1 + update}#16.43/43.592747/-116.352211/0/54`); 
 	qs('#debug').addEventListener('change', function (e) {
 		window.location = `./?debug=${e.target.checked}&light=${light}${window.location.hash}`
 	});
