@@ -1,3 +1,4 @@
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 class TileLoader {
@@ -84,9 +85,10 @@ export class GLTF extends TileLoader {
 		this.glbData = null;
 	}
 	parseResponse(buffer) {
-		super.parseResponse(buffer);
-		this.glbData = this.binaryData;
-		return this;
+		return new Promise((resolve) => {
+			gltfLoader.parse(buffer,url, (gltf) => { 
+				resolve( gltf ) } )
+		});
 	}
 }
 

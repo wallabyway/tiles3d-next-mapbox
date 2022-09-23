@@ -2,7 +2,11 @@ import { B3DM, PNTS, GLTF } from "./tileLoader.mjs";
 import { CameraSync, ThreeboxConstants } from "./cameraSync.mjs";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from './meshopt_decoder.module.js';
 
+let loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+window.ptmat = null;
 
 export default class Mapbox3DTiles {
 
@@ -56,7 +60,8 @@ export class TileSet {
 		}
 		let json = await response.json();
 		this.version = json.asset.version;
-		this.geometricError = json.geometricError;
+		this.geometricError = json.geometricError * (styleParams.geomScale || 1.0);
+		console.log(this.geometricError)
 		this.refine = json.root.refine ? json.root.refine.toUpperCase() : 'ADD';
 		this.root = new ThreeDeeTile(json.root, resourcePath, styleParams, this.updateCallback, this.refine);
 		return;
@@ -99,7 +104,7 @@ class ThreeDeeTile {
 			this.center = null;
 		}
 		this.refine = json.refine ? json.refine.toUpperCase() : parentRefine;
-		this.geometricError = json.geometricError;
+		this.geometricError = json.geometricError * (styleParams.geomScale || 1.0);
 		this.worldTransform = parentTransform ? parentTransform.clone() : new THREE.Matrix4();
 		this.transform = json.transform;
 		if (this.transform) {
@@ -171,7 +176,6 @@ class ThreeDeeTile {
 					break;
 				case 'b3dm':
 					try {
-						let loader = new GLTFLoader();
 						let b3dm = new B3DM(url);
 						let rotateX = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
 						this.tileContent.applyMatrix4(rotateX); // convert from GLTF Y-up to Z-up
@@ -220,15 +224,25 @@ class ThreeDeeTile {
 				case 'pnts':
 					let pnts = new PNTS(url);
 					let geometry = await pnts.load();
-					let material = new THREE.PointsMaterial({ size: 10, sizeAttenuation: true, vertexColors: true });
+					let material = new THREE.PointsMaterial({ size: this.styleParams.pointsize, sizeAttenuation: false, vertexColors: true });
 					this.points = new THREE.Points(geometry, material);
 					this.tileContent.add(new THREE.Points(geometry, material));
 					break;
 
 				case 'gltf':
-				case 'glb':
-					let gltf = new GLTF(url);
-					throw new Error('GLTF tile not yet implemented');
+				case '.glb':
+					loader.load(url, (gltfMesh) => {
+						gltfMesh.scene.rotation.set(3.14/2,0,0);
+						if (!window.ptmat) {
+							window.ptmat = gltfMesh.scene.children[0].material;
+							if (window.ptmat) {
+								window.ptmat.size = 10;
+								window.ptmat.sizeAttenuation = true;
+							}
+						}
+						gltfMesh.scene.children[0].material = window.ptmat;
+						this.tileContent.add(gltfMesh.scene);
+					})
 					break;
 				case 'cmpt':
 					throw new Error('cmpt tiles not yet implemented');
@@ -349,6 +363,7 @@ class Layer {
 		if ('color' in params) this.styleParams.color = params.color;
 		if ('opacity' in params) this.styleParams.opacity = params.opacity;
 		if ('pointsize' in params) this.styleParams.pointsize = params.pointsize;
+		if ('geomScale' in params) this.styleParams.geomScale = params.geomScale;
 
 		this.loadStatus = 0;
 		this.viewProjectionMatrix = null;
@@ -358,12 +373,12 @@ class Layer {
 	}
 	LightsArray() {
 		const arr = [];
-		let directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.5);
+		let directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.9);
 		directionalLight1.position.set(0.5, 1, 0.5).normalize();
 		let target = directionalLight1.target.position.set(100000000, 1000000000, 0).normalize();
 		arr.push(directionalLight1);
 
-		let directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+		let directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.9);
 		//directionalLight2.position.set(0, 70, 100).normalize();
 		directionalLight2.position.set(0.3, 0.3, 1).normalize();
 		arr.push(directionalLight2);
