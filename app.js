@@ -10,8 +10,9 @@ mapboxgl.accessToken = "pk.eyJ1Ijoid2FsbGFieXdheSIsImEiOiJjbDV1MHF1MzkwZXAyM2tve
 // Load the mapbox map
 var map = new mapboxgl.Map({
 	container: 'map',
-	style: `mapbox://styles/mapbox/${light ? 'light' : 'dark'}-v10?optimize=true`,
-	center: [4.94442925, 52.31300579],
+	style: 'mapbox://styles/mapbox/satellite-v9',
+	//style: `mapbox://styles/mapbox/${light ? 'light' : 'dark'}-v10?optimize=true`,
+	center: [24.94442925, 32.31300579],
 	zoom: 14.3,
 	bearing: 0,
 	pitch: 45,
@@ -31,14 +32,23 @@ map.on('style.load', function () {
 
 	const oak = new Mapbox3DTiles.Layer({
 		id: 'oakland',
-		url: './oaklandtrainstation/draco/tileset.json',
+		url: './cad-recgolf/pnts/tileset.json',
 		opacity: 1.0,
-		pointsize: 10.0
+		pointsize: 3.0,
+		geomScale: 0.1
 	});
 	map.addLayer(oak, 'rotterdam');
 
-});
+	const cad1 = new Mapbox3DTiles.Layer({
+		id: 'audubon.rvt',
+		url: './cad-recgolf/tileset.json',
+		opacity: 1.0,
+		geomScale: 1.0
+	});
+	map.addLayer(cad1, 'rotterdam');
 
+});
+/*
 map.on('mousemove', (event) => {
 	let infoElement = document.querySelector('#info');
 	let features = map.queryRenderedFeatures(event.point, { outline: true, outlineColor: 0xff0000 });
@@ -52,3 +62,4 @@ map.on('mousemove', (event) => {
 		infoElement.innerHTML = "Hover map objects for info";
 	}
 })
+*/
