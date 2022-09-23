@@ -23,7 +23,12 @@ export const ThreeboxConstants = {
 	EARTH_CIRCUMFERENCE: 40075000, // In meters
 }
 
-
+function latLongToEPSG3857(lat,lon) {
+	// https://gis.stackexchange.com/a/387677
+	const x = (Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180)) * (20037508.34 / 180)
+	const y = (lon * 20037508.34 / 180)
+	return [x,y];
+}
 
 export class CameraSync {
 	constructor(map, camera, world) {
