@@ -1,4 +1,7 @@
 # Tiles3D-Mapbox
+
+DEMO: [CLICK HERE](https://wallabyway.github.io/tiles3d-next-mapbox/?debug=true&light=false#16.13/51.897788/4.472913/34.4/58)
+
 This is an implementation of 3D-Tiles-Next using mapbox-gl/three.js (based on [github/Geodan](https://github.com/Geodan/mapbox-3dtiles)).  It will be used to compare two different point-cloud compressions, based on their performance (decode time, file size, concurrency, loc).
 
 <img src="https://user-images.githubusercontent.com/440241/180083018-5359ecef-b37e-413f-9aa8-942acd10828e.gif" width="770px">
